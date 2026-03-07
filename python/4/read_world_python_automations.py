@@ -611,3 +611,208 @@ headers = re.findall(r'^(#{1,6})\s*(.*)', md, re.MULTILINE)
 toc = [(len(h[0]), h[1]) for h in headers]
 print(toc)
 --------------------
+Category 4: Web Scraping Exercises (40)
+
+# Install required packages if not already: pip install requests beautifulsoup4 selenium pandas
+
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+# 101. Fetch a webpage using requests
+url = "https://example.com"
+response = requests.get(url)
+html = response.text
+print(html[:200])  # first 200 chars
+
+# 102. Parse HTML with BeautifulSoup
+soup = BeautifulSoup(html, 'html.parser')
+print(soup.title.string)
+
+# 103. Extract all links (<a> href)
+links = [a['href'] for a in soup.find_all('a', href=True)]
+print(links[:5])
+
+# 104. Extract all images (<img> src)
+images = [img['src'] for img in soup.find_all('img', src=True)]
+print(images[:5])
+
+# 105. Extract all paragraph texts
+paragraphs = [p.get_text() for p in soup.find_all('p')]
+print(paragraphs[:5])
+
+# 106. Extract text from a specific class
+texts = [div.get_text() for div in soup.find_all('div', class_='content')]
+print(texts[:5])
+
+# 107. Extract text from a specific ID
+text = soup.find(id='main').get_text() if soup.find(id='main') else ''
+print(text)
+
+# 108. Extract all headings (h1-h6)
+headings = [h.get_text() for h in soup.find_all(re.compile('^h[1-6]$'))]
+print(headings)
+
+# 109. Extract links containing a specific keyword
+keyword_links = [a['href'] for a in soup.find_all('a', href=True) if 'blog' in a['href']]
+print(keyword_links)
+
+# 110. Extract all tables as DataFrames
+tables = pd.read_html(html)
+for table in tables:
+    print(table.head())
+
+# 111. Extract table by ID
+table = soup.find('table', id='data-table')
+rows = [[td.get_text() for td in tr.find_all(['td','th'])] for tr in table.find_all('tr')]
+print(rows[:5])
+
+# 112. Extract list items
+items = [li.get_text() for li in soup.find_all('li')]
+print(items[:5])
+
+# 113. Extract meta tags
+meta = {m.get('name', m.get('property')): m.get('content') for m in soup.find_all('meta') if m.get('content')}
+print(meta)
+
+# 114. Extract all scripts with src attribute
+scripts = [s['src'] for s in soup.find_all('script', src=True)]
+print(scripts)
+
+# 115. Extract all stylesheets
+css = [link['href'] for link in soup.find_all('link', rel='stylesheet')]
+print(css)
+
+# 116. Extract links ending with .pdf
+pdf_links = [a['href'] for a in soup.find_all('a', href=True) if a['href'].endswith('.pdf')]
+print(pdf_links)
+
+# 117. Extract form input names
+inputs = [i['name'] for i in soup.find_all('input', name=True)]
+print(inputs)
+
+# 118. Extract option values from select dropdowns
+options = [o['value'] for o in soup.find_all('option', value=True)]
+print(options)
+
+# 119. Extract images with alt text
+images_alt = [(img['src'], img.get('alt')) for img in soup.find_all('img', src=True)]
+print(images_alt[:5])
+
+# 120. Extract links and text together
+link_texts = [(a.get_text(), a['href']) for a in soup.find_all('a', href=True)]
+print(link_texts[:5])
+
+# 121. Scrape multiple pages using pagination
+base_url = "https://example.com/page/"
+for i in range(1, 4):
+    r = requests.get(base_url + str(i))
+    soup = BeautifulSoup(r.text, 'html.parser')
+    print(soup.title.string)
+
+# 122. Extract tables and convert to CSV
+for i, table in enumerate(pd.read_html(html)):
+    table.to_csv(f'table_{i}.csv', index=False)
+
+# 123. Extract all links and save to a file
+with open('links.txt','w') as f:
+    for link in links:
+        f.write(link + '\n')
+
+# 124. Extract headings and subheadings
+headings = [h.get_text() for h in soup.find_all(['h1','h2'])]
+print(headings)
+
+# 125. Extract bold and italic text
+bold_text = [b.get_text() for b in soup.find_all('b')]
+italic_text = [i.get_text() for i in soup.find_all('i')]
+print(bold_text[:5], italic_text[:5])
+
+# 126. Scrape tables with specific class
+table = soup.find('table', class_='data')
+rows = [[td.get_text() for td in tr.find_all(['td','th'])] for tr in table.find_all('tr')]
+print(rows[:5])
+
+# 127. Extract links from a specific section
+section = soup.find('div', class_='sidebar')
+section_links = [a['href'] for a in section.find_all('a', href=True)]
+print(section_links)
+
+# 128. Extract article titles and summaries
+articles = soup.find_all('article')
+for a in articles:
+    title = a.find('h2').get_text() if a.find('h2') else ''
+    summary = a.find('p').get_text() if a.find('p') else ''
+    print(title, summary)
+
+# 129. Scrape images and download them
+import os
+os.makedirs('images', exist_ok=True)
+for img in soup.find_all('img', src=True):
+    img_url = img['src']
+    r = requests.get(img_url)
+    with open(os.path.join('images', os.path.basename(img_url)), 'wb') as f:
+        f.write(r.content)
+
+# 130. Extract links matching regex
+pattern_links = [a['href'] for a in soup.find_all('a', href=True) if re.search(r'/products/\d+', a['href'])]
+print(pattern_links)
+
+# 131. Extract author names from articles
+authors = [a.get_text() for a in soup.find_all('span', class_='author')]
+print(authors)
+
+# 132. Scrape nested elements
+nested = soup.find_all('div', class_='post')
+for div in nested:
+    title = div.find('h3').get_text() if div.find('h3') else ''
+    date = div.find('span', class_='date').get_text() if div.find('span', class_='date') else ''
+    print(title, date)
+
+# 133. Extract all text inside a tag and strip whitespace
+texts = [t.get_text(strip=True) for t in soup.find_all('p')]
+print(texts[:5])
+
+# 134. Extract image URLs with specific extension
+jpg_images = [img['src'] for img in soup.find_all('img', src=True) if img['src'].endswith('.jpg')]
+print(jpg_images)
+
+# 135. Scrape table data and convert to dictionary
+table = soup.find('table')
+data_dict = {}
+for tr in table.find_all('tr'):
+    cols = tr.find_all(['td','th'])
+    if len(cols) >= 2:
+        data_dict[cols[0].get_text()] = cols[1].get_text()
+print(data_dict)
+
+# 136. Extract links and check if they are internal or external
+internal = [a['href'] for a in soup.find_all('a', href=True) if a['href'].startswith('/')]
+external = [a['href'] for a in soup.find_all('a', href=True) if a['href'].startswith('http')]
+print(internal[:5], external[:5])
+
+# 137. Extract text from multiple pages (pagination)
+for page in range(1,4):
+    r = requests.get(f'https://example.com/page/{page}')
+    soup = BeautifulSoup(r.text,'html.parser')
+    print([h.get_text() for h in soup.find_all('h2')])
+
+# 138. Extract data from JSON embedded in HTML
+script = soup.find('script', type='application/ld+json')
+if script:
+    data = json.loads(script.string)
+    print(data)
+
+# 139. Extract links from a table
+table = soup.find('table')
+links_in_table = [a['href'] for a in table.find_all('a', href=True)]
+print(links_in_table)
+
+# 140. Scrape dynamic content using Selenium
+# from selenium import webdriver
+# driver = webdriver.Chrome()
+# driver.get("https://example.com")
+# content = driver.find_element("tag name", "body").text
+# print(content[:200])
+# driver.quit()
+--------------------
