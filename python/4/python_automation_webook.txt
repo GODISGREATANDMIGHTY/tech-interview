@@ -1,0 +1,11 @@
+python_automation_workbook/
+│
+├─ 01_file_directory_automation.py       # 200 examples
+├─ 02_text_data_processing.py            # 200 examples
+├─ 03_web_automation.py                  # 150 examples
+├─ 04_system_admin_scripting.py          # 100 examples
+├─ 05_email_notifications.py             # 100 examples
+├─ 06_excel_spreadsheet_automation.py    # 100 examples
+├─ 07_gui_automation.py                  # 50 examples
+├─ 08_error_handling_logging.py          # 50 examples
+└─ 09_api_automation.py                  # 50 examples
