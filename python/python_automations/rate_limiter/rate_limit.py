@@ -10,8 +10,6 @@ class RateLimiter(object):
 
     def allow_request(self):
         current_time = time.time()
-        print(self.requests)
-
         while self.requests and current_time - self.requests[0] > self.window:
             self.requests.popleft()
 
