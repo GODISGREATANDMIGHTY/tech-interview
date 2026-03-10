@@ -20,4 +20,4 @@ b = Singleton()
 c = Singleton()
 d = Singleton()
 
-print(a == b == c ==d)
+print(a is b and b is c and c is d and d is a)
